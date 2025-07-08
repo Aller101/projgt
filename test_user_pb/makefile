@@ -11,10 +11,10 @@ proto:
 
 # ..._opt=paths=source_relative - опускает "option go_package" в proto файле
 
-.PHONY: server
-server:
-	cmd /C start cmd /k "go run ./cmd/server/main.go"
+.PHONY: insecure_server
+insecure_server:
+	cmd /C start cmd /k "go run ./cmd/insecure/server/main.go"
 
-.PHONY: client
-client:
-	cmd /C start cmd /k "go run ./cmd/client/main.go"
+.PHONY: insecure_client
+insecure_client:
+	cmd /C start cmd /k "go run ./cmd/insecure/client/main.go"

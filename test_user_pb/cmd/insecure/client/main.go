@@ -8,10 +8,13 @@ import (
 	pb "test_user_pb/gen"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(
+		insecure.NewCredentials(),
+	))
 	if err != nil {
 		log.Fatalf("dont connect to serv: %v", err)
 	}

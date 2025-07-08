@@ -29,7 +29,7 @@ func (s *userServiceServer) GetUser(ctx context.Context, req *pb.UserRequest) (*
 func main() {
 	listener, err := net.Listen("tcp", ":50051")
 	if err != nil {
-		log.Fatal("Err strating serv")
+		log.Fatalf("net.Listen error: %v", err)
 	}
 
 	grpcServ := grpc.NewServer()
