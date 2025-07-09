@@ -1,0 +1,6 @@
+test_user_pb/server.csr
+test_user_pb/server.key
+test_user_pb/ca.srl
+test_user_pb/ca.key
+test_user_pb/ca.crt
+test_user_pb/server.crt
