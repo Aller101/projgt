@@ -13,6 +13,10 @@ type userServiceServer struct {
 	pb.UnimplementedUserServiceServer
 }
 
+func RegisterServerAPI(gRPCServ *grpc.Server) {
+	pb.RegisterUserServiceServer(gRPCServ, &userServiceServer{})
+}
+
 func (s *userServiceServer) GetUser(ctx context.Context, req *pb.UserRequest) (*pb.UserResponse, error) {
 
 	log.Printf("Got request to user with ID: %d", req.GetId())
@@ -33,7 +37,8 @@ func main() {
 	}
 
 	grpcServ := grpc.NewServer()
-	pb.RegisterUserServiceServer(grpcServ, &userServiceServer{})
+
+	RegisterServerAPI(grpcServ)
 
 	log.Printf("gRPC serv is starting to: 50051")
 
