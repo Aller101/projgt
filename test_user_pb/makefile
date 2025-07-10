@@ -11,13 +11,37 @@ proto:
 
 # ..._opt=paths=source_relative - опускает "option go_package" в proto файле
 
-.PHONY: insecure_server
-insecure_server:
-	cmd /C start cmd /k "go run ./cmd/insecure/server/main.go"
+UNAME_S := $(shell uname -s)
 
-.PHONY: insecure_client
+.PHONY: insecure_server insecure_client
+
+insecure_server:
+ifeq ($(OS),Windows_NT)
+	@echo "Running server on Windows"
+	cmd /C start cmd /k "go run ./cmd/insecure/server/main.go"
+else ifeq ($(UNAME_S),Linux)
+	@echo "Running server on Linux"
+	gnome-terminal -- go run ./cmd/insecure/server/main.go
+else ifeq ($(UNAME_S),Darwin)
+	@echo "Running server on macOS"
+	open -a Terminal go run ./cmd/insecure/server/main.go
+else
+	@echo "Unsupported OS: $(UNAME_S)"
+endif
+
 insecure_client:
+ifeq ($(OS),Windows_NT)
+	@echo "Running client on Windows"
 	cmd /C start cmd /k "go run ./cmd/insecure/client/main.go"
+else ifeq ($(UNAME_S),Linux)
+	@echo "Running client on Linux"
+	gnome-terminal -- go run ./cmd/insecure/client/main.go
+else ifeq ($(UNAME_S),Darwin)
+	@echo "Running client on macOS"
+	open -a Terminal go run ./cmd/insecure/client/main.go
+else
+	@echo "Unsupported OS: $(UNAME_S)"
+endif
 
 .PHONY: secure_server
 secure_server:
