@@ -8,8 +8,9 @@ import (
 )
 
 var upgader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+	ReadBufferSize:    1024,
+	WriteBufferSize:   1024,
+	EnableCompression: true,
 }
 
 func handleConnection(w http.ResponseWriter, r *http.Request) {
@@ -35,6 +36,7 @@ func handleConnection(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
 	http.HandleFunc("/ws", handleConnection)
 	log.Println("http server started on :8000")
 	err := http.ListenAndServe(":8000", nil)

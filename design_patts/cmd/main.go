@@ -1,0 +1,26 @@
+package main
+
+import (
+	p "design_patts/singleton"
+	"fmt"
+)
+
+func main() {
+	// s := p.Singleton{}
+
+	s := p.NewSingleton("Kolia")
+	fmt.Printf("%v\n", s)
+	fmt.Printf("%v\n", s.GetName())
+
+	s2 := p.NewSingleton("Nastia")
+	fmt.Printf("%v\n", s2)
+	fmt.Printf("%v\n", s2.GetName())
+
+	fmt.Printf("%t: %v --- %v\n", *s2 == *s, *s2, *s)
+	fmt.Printf("%t: %v --- %v\n\n", &s2 == &s, &s2, &s)
+
+	s = p.NewSingleton("Vasia")
+
+	fmt.Printf("%v\n", s.GetName())
+
+}
