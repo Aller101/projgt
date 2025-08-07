@@ -42,12 +42,16 @@ func TestSingletonGorut(t *testing.T) {
 
 func TestSingletonParall(t *testing.T) {
 
-	tests := [100]struct {
+	type NameStr struct {
 		name string
 		id   int
-	}{}
+	}
 
-	for i := range 100 {
+	const ll = 100
+
+	tests := make([]NameStr, ll)
+
+	for i := range ll {
 		tests[i].name = fmt.Sprintf("case: %d", i)
 		tests[i].id = i
 	}
