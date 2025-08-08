@@ -1,6 +1,7 @@
 package wsserver
 
 import (
+	"context"
 	"net/http"
 	"sync"
 	"time"
@@ -15,6 +16,7 @@ const (
 
 type WSServer interface {
 	Start() error
+	Stop() error
 }
 
 type wsServer struct {
@@ -53,6 +55,21 @@ func (s *wsServer) Start() error {
 	return s.srv.ListenAndServe()
 }
 
+func (s *wsServer) Stop() error {
+	log.Infof("Clients before %v\n", s.wsClients)
+	close(s.broadcast)
+	s.mutex.Lock()
+	for conn := range s.wsClients {
+		if err := conn.Close(); err != nil {
+			log.Errorf("Error with closing: %v", err)
+		}
+		delete(s.wsClients, conn)
+	}
+	s.mutex.Unlock()
+	log.Infof("Clients before %v\n", s.wsClients)
+	return s.srv.Shutdown(context.Background())
+}
+
 func (s *wsServer) testHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Test is successful"))
 }
@@ -75,9 +92,12 @@ func (s *wsServer) wsHandler(w http.ResponseWriter, r *http.Request) {
 func (s *wsServer) readFromClient(conn *websocket.Conn) {
 	for {
 		msg := new(wsMessage)
-		err := conn.ReadJSON(msg)
-		if err != nil {
-			log.Errorf("Error with reading from ws: %v", err)
+		if err := conn.ReadJSON(msg); err != nil {
+			//обработка err, когда отключается пользователь
+			wsErr, ok := err.(*websocket.CloseError)
+			if !ok || wsErr.Code != websocket.CloseGoingAway {
+				log.Errorf("Error with reading from ws: %v", err)
+			}
 			break
 		}
 		msg.IPAddress = conn.RemoteAddr().String()
