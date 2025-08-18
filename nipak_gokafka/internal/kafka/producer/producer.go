@@ -23,7 +23,15 @@ type Producer struct {
 func NewProducer(addr []string) (*Producer, error) {
 
 	config := &kafka.ConfigMap{
-		"bootstrap.servers": strings.Join(addr, ","),
+		// "bootstrap.servers": addr[0],
+		"bootstrap.servers":       strings.Join(addr, ","),
+		"client.id":               "go-producer",
+		"acks":                    "all",
+		"retries":                 5,
+		"socket.timeout.ms":       10000,
+		"security.protocol":       "plaintext",
+		"api.version.request":     "true",
+		"broker.version.fallback": "3.7.0",
 	}
 
 	p, err := kafka.NewProducer(config)
