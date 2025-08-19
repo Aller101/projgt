@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	address = []string{"localhost:59092"}
+	address = []string{"localhost:9094"}
 )
 
 const (
